@@ -7,6 +7,8 @@ public class DisplayPanel extends JPanel {
 
     private int gridWidth, gridHeight, pxMargin;
 
+    private boolean loopRunning = false;
+
     public DisplayPanel () {
         setBackground(Color.BLACK);
 
@@ -36,4 +38,19 @@ public class DisplayPanel extends JPanel {
     public Dimension getPreferredSize() {
         return new Dimension(PX_WIDTH, PX_HEIGHT);
     }
+
+    public void loop() {
+        long lastTime = System.nanoTime();
+
+        while (loopRunning) {
+            long currentTime = System.nanoTime();
+            long deltaTime = currentTime - lastTime;
+            lastTime = currentTime;
+
+            //do things
+            repaint();
+        }
+    }
+
+
 }
