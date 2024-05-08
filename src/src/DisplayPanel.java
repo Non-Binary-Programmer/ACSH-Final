@@ -9,14 +9,20 @@ public class DisplayPanel extends JPanel {
 
     private boolean loopRunning = false;
 
+    private GameManager manager;
+
     public DisplayPanel () {
         setBackground(Color.BLACK);
-
-        // addInputListener(controller);
 
         gridWidth = 8;
         gridHeight = 8;
         pxMargin = 10;
+
+        manager = new GameManager(gridWidth, gridHeight);
+
+        addKeyListener(manager);
+
+        loopRunning = true;
     }
 
     protected void paintComponent (Graphics g) {
@@ -25,14 +31,19 @@ public class DisplayPanel extends JPanel {
         int widthPerCell = (int) Math.ceil((double) PX_WIDTH / gridWidth);
         int heightPerCell = (int) Math.ceil((double) PX_HEIGHT / gridHeight);
 
-        g.setColor(Color.WHITE);
-
         for (int x = 0; x < gridWidth; x++) {
             for (int y = 0; y < gridHeight; y++) {
+                g.setColor(manager.getColor(x, y));
                 g.fillRect((widthPerCell * x) + pxMargin, (heightPerCell * y) + pxMargin,
                         widthPerCell - (2 * pxMargin), heightPerCell - (2 * pxMargin));
             }
         }
+
+        g.setColor(Color.BLUE);
+
+        g.fillOval((widthPerCell * manager.getPlayerX()) + pxMargin,
+                (heightPerCell * manager.getPlayerY()) + pxMargin,
+                widthPerCell - (2 * pxMargin), heightPerCell - (2 * pxMargin));
     }
 
     public Dimension getPreferredSize() {
@@ -49,6 +60,10 @@ public class DisplayPanel extends JPanel {
 
             //do things
             repaint();
+            manager.update(deltaTime);
+            try {
+                Thread.sleep(20);
+            } catch (InterruptedException ignored) {}
         }
     }
 

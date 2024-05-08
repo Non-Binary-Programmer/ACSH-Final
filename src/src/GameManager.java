@@ -1,3 +1,4 @@
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
@@ -7,6 +8,9 @@ public class GameManager implements KeyListener {
 
     private int playerX;
     private int playerY;
+
+    private double difficulty = 1.0;
+    private long nextHazard = 2000000000;
 
     private final Tile[][] tiles;
 
@@ -26,16 +30,66 @@ public class GameManager implements KeyListener {
 
     @Override
     public void keyTyped(KeyEvent e) {
-
+        System.out.println(e.getKeyChar());
     }
 
     @Override
     public void keyPressed(KeyEvent e) {
-
+        System.out.println(e.getKeyCode());
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
+        System.out.println(e.getKeyCode());
+    }
 
+    public void update (long deltaTime) {
+        for (Tile[] row: tiles) {
+            for (Tile tile: row) {
+                tile.update(deltaTime);
+            }
+        }
+
+        nextHazard -= deltaTime;
+        if (nextHazard <= 0) {
+            difficulty += 0.05;
+            nextHazard += (long) (2000000000 / difficulty);
+
+            int tilesCreated = 0;
+            while (tilesCreated < difficulty) {
+                int targetX = (int) (Math.random() * width);
+                int targetY = (int) (Math.random() * height);
+
+                if (tiles[targetY][targetX].getState() == Tile.State.EMPTY) {
+                    tilesCreated++;
+                    tiles[targetY][targetX].readyAttack(
+                            (long) (1000000000 / Math.sqrt(difficulty)),
+                            (long) (1000000000 / Math.sqrt(difficulty))
+                    );
+                }
+            }
+        }
+
+        if (tiles[playerY][playerX].getState() == Tile.State.HAZARD) {
+            for (Tile[] row: tiles) {
+                for(Tile tile: row) {
+                    tile.clear();
+                }
+            }
+
+            difficulty = 1.0;
+        }
+    }
+
+    public Color getColor(int x, int y) {
+        return tiles[y][x].getColor();
+    }
+
+    public int getPlayerX() {
+        return playerX;
+    }
+
+    public int getPlayerY() {
+        return playerY;
     }
 }

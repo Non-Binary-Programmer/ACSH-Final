@@ -59,4 +59,8 @@ public class Tile {
     public State getState() {
         return state;
     }
+
+    public void clear() {
+        this.state = State.EMPTY;
+    }
 }
