@@ -12,6 +12,9 @@ public class GameManager implements KeyListener {
     private double difficulty = 1.0;
     private long nextHazard = 2000000000;
 
+    private int score = 0;
+    private int life = 3;
+
     private final Tile[][] tiles;
 
     public GameManager (int width, int height) {
@@ -30,17 +33,44 @@ public class GameManager implements KeyListener {
 
     @Override
     public void keyTyped(KeyEvent e) {
-        System.out.println(e.getKeyChar());
     }
 
     @Override
     public void keyPressed(KeyEvent e) {
         System.out.println(e.getKeyCode());
+        switch (e.getKeyCode()) {
+            case 87: // W
+            case 38: // Up arrow
+            case 104: // Numpad 8
+                if (playerY != 0) {
+                    playerY--;
+                }
+                break;
+            case 65: // A
+            case 37: // Left arrow
+            case 100: // Numpad 4
+                if (playerX != 0) {
+                    playerX--;
+                }
+                break;
+            case 83: // S
+            case 40: // Down arrow
+            case 98: // Numpad 2
+                if (playerY != height - 1) {
+                    playerY++;
+                }
+                break;
+            case 68: // D
+            case 39: // Right arrow
+            case 102: // Numpad 6
+                if (playerX != width - 1) {
+                    playerX++;
+                }
+        }
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
-        System.out.println(e.getKeyCode());
     }
 
     public void update (long deltaTime) {
@@ -56,7 +86,7 @@ public class GameManager implements KeyListener {
             nextHazard += (long) (2000000000 / difficulty);
 
             int tilesCreated = 0;
-            while (tilesCreated < difficulty) {
+            while (tilesCreated < difficulty * 3) {
                 int targetX = (int) (Math.random() * width);
                 int targetY = (int) (Math.random() * height);
 
@@ -66,18 +96,25 @@ public class GameManager implements KeyListener {
                             (long) (1000000000 / Math.sqrt(difficulty)),
                             (long) (1000000000 / Math.sqrt(difficulty))
                     );
+                    score += 100 * difficulty;
                 }
             }
         }
 
         if (tiles[playerY][playerX].getState() == Tile.State.HAZARD) {
-            for (Tile[] row: tiles) {
-                for(Tile tile: row) {
-                    tile.clear();
+            if (--life == 0) {
+                for (Tile[] row : tiles) {
+                    for (Tile tile : row) {
+                        tile.clear();
+                    }
                 }
-            }
 
-            difficulty = 1.0;
+                difficulty = 1.0;
+                score = 0;
+                life = 3;
+            } else {
+                tiles[playerY][playerX].clear();
+            }
         }
     }
 
@@ -91,5 +128,13 @@ public class GameManager implements KeyListener {
 
     public int getPlayerY() {
         return playerY;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public int getLife() {
+        return life;
     }
 }

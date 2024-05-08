@@ -16,6 +16,8 @@ public class GameDisplay {
         frame.pack();
         frame.setVisible(true);
 
+        dPanel.requestFocusInWindow();
+
         dPanel.loop();
     }
 }

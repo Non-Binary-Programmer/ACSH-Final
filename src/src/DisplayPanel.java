@@ -44,6 +44,9 @@ public class DisplayPanel extends JPanel {
         g.fillOval((widthPerCell * manager.getPlayerX()) + pxMargin,
                 (heightPerCell * manager.getPlayerY()) + pxMargin,
                 widthPerCell - (2 * pxMargin), heightPerCell - (2 * pxMargin));
+
+        g.setColor(Color.WHITE);
+        g.drawString("Life: " + manager.getLife(), 10, PX_HEIGHT);
     }
 
     public Dimension getPreferredSize() {
@@ -62,7 +65,7 @@ public class DisplayPanel extends JPanel {
             repaint();
             manager.update(deltaTime);
             try {
-                Thread.sleep(20);
+                Thread.sleep(10);
             } catch (InterruptedException ignored) {}
         }
     }
