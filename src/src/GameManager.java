@@ -13,6 +13,8 @@ public class GameManager implements KeyListener {
     private long nextHazard = 2000000000;
 
     private int score = 0;
+
+    private int highScore = 0;
     private int life = 3;
 
     private final Tile[][] tiles;
@@ -92,12 +94,17 @@ public class GameManager implements KeyListener {
 
                 if (tiles[targetY][targetX].getState() == Tile.State.EMPTY) {
                     tilesCreated++;
-                    tiles[targetY][targetX].readyAttack(
-                            (long) (1000000000 / Math.sqrt(difficulty)),
-                            (long) (1000000000 / Math.sqrt(difficulty))
-                    );
-                    score += 100 * difficulty;
+                    if (Math.random() < 0.95) {
+                        tiles[targetY][targetX].readyAttack(
+                                (long) (1000000000 / Math.sqrt(difficulty)),
+                                (long) (1000000000 / Math.sqrt(difficulty))
+                        );
+                        score += 100 * difficulty;
+                    } else {
+                        tiles[targetY][targetX].becomeTarget((long) (3000000000L / Math.sqrt(difficulty)));
+                    }
                 }
+                highScore = Math.max(score, highScore);
             }
         }
 
@@ -116,6 +123,21 @@ public class GameManager implements KeyListener {
                 tiles[playerY][playerX].clear();
             }
         }
+
+        if (tiles[playerY][playerX].getState() == Tile.State.TARGET) {
+            double rand = Math.random();
+            if (rand < 0.5) {
+                score += 500 * difficulty;
+            } else if (rand < 0.9) {
+                score += 200 * difficulty;
+                difficulty -= 0.15;
+            } else {
+                score += 100 * difficulty;
+                life++;
+            }
+            highScore = Math.max(score, highScore);
+            tiles[playerY][playerX].clear();
+        }
     }
 
     public Color getColor(int x, int y) {
@@ -132,6 +154,10 @@ public class GameManager implements KeyListener {
 
     public int getScore() {
         return score;
+    }
+
+    public int getHighScore() {
+        return highScore;
     }
 
     public int getLife() {

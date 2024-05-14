@@ -4,12 +4,13 @@ public class Tile {
     public enum State {
         EMPTY,
         WARNING,
-        HAZARD
+        TARGET, HAZARD
     }
 
     private State state = State.EMPTY;
     private long warningTimer;
     private long hazardTimer;
+    private long targetTimer;
 
     public Tile () {
 
@@ -25,6 +26,9 @@ public class Tile {
             }
             case WARNING -> {
                 return Color.ORANGE;
+            }
+            case TARGET -> {
+                return Color.GREEN;
             }
         }
     }
@@ -43,6 +47,12 @@ public class Tile {
                     this.state = State.EMPTY;
                 }
             }
+            case TARGET -> {
+                this.targetTimer -= deltaTime;
+                if (targetTimer <= 0) {
+                    this.state = State.EMPTY;
+                }
+            }
         }
     }
 
@@ -54,6 +64,15 @@ public class Tile {
         this.hazardTimer = hazardTime;
 
         this.state = State.WARNING;
+    }
+
+    public void becomeTarget (long targetTime) {
+        if (this.state != State.EMPTY) {
+            throw new IllegalStateException();
+        }
+        this.targetTimer = targetTime;
+
+        this.state = State.TARGET;
     }
 
     public State getState() {
