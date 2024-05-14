@@ -11,14 +11,14 @@ public class DisplayPanel extends JPanel {
 
     private GameManager manager;
 
-    public DisplayPanel () {
+    public DisplayPanel (GameDisplay display) {
         setBackground(Color.BLACK);
 
         gridWidth = 8;
         gridHeight = 8;
         pxMargin = 10;
 
-        manager = new GameManager(gridWidth, gridHeight);
+        manager = new GameManager(gridWidth, gridHeight, display);
 
         addKeyListener(manager);
 
@@ -26,6 +26,7 @@ public class DisplayPanel extends JPanel {
     }
 
     protected void paintComponent (Graphics g) {
+        System.out.println("painting");
         super.paintComponent(g);
 
         int widthPerCell = (int) Math.ceil((double) PX_WIDTH / gridWidth);
@@ -56,6 +57,7 @@ public class DisplayPanel extends JPanel {
     }
 
     public void loop() {
+        loopRunning = true;
         long lastTime = System.nanoTime();
 
         while (loopRunning) {
@@ -72,5 +74,8 @@ public class DisplayPanel extends JPanel {
         }
     }
 
+    public void unloop() {
+        loopRunning = false;
+    }
 
 }

@@ -6,6 +6,8 @@ public class GameManager implements KeyListener {
     private final int width;
     private final int height;
 
+    private final GameDisplay display;
+
     private int playerX;
     private int playerY;
 
@@ -19,7 +21,8 @@ public class GameManager implements KeyListener {
 
     private final Tile[][] tiles;
 
-    public GameManager (int width, int height) {
+    public GameManager (int width, int height, GameDisplay display) {
+        this.display = display;
         this.width = width;
         this.height = height;
         this.playerX = width / 2;
@@ -75,6 +78,18 @@ public class GameManager implements KeyListener {
     public void keyReleased(KeyEvent e) {
     }
 
+    public void reset () {
+        for (Tile[] row : tiles) {
+            for (Tile tile : row) {
+                tile.clear();
+            }
+        }
+
+        difficulty = 1.0;
+        score = 0;
+        life = 3;
+    }
+
     public void update (long deltaTime) {
         for (Tile[] row: tiles) {
             for (Tile tile: row) {
@@ -110,15 +125,8 @@ public class GameManager implements KeyListener {
 
         if (tiles[playerY][playerX].getState() == Tile.State.HAZARD) {
             if (--life == 0) {
-                for (Tile[] row : tiles) {
-                    for (Tile tile : row) {
-                        tile.clear();
-                    }
-                }
-
-                difficulty = 1.0;
-                score = 0;
-                life = 3;
+                reset();
+                display.changePanel(GameDisplay.State.MENU);
             } else {
                 tiles[playerY][playerX].clear();
             }

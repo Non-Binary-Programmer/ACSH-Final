@@ -11,6 +11,7 @@ public class Tile {
     private long warningTimer;
     private long hazardTimer;
     private long targetTimer;
+    private long initialTimer;
 
     public Tile () {
 
@@ -39,6 +40,7 @@ public class Tile {
                 this.warningTimer -= deltaTime;
                 if (warningTimer <= 0) {
                     this.state = State.HAZARD;
+                    this.initialTimer = hazardTimer;
                 }
             }
             case HAZARD -> {
@@ -60,6 +62,7 @@ public class Tile {
         if (this.state != State.EMPTY) {
             throw new IllegalStateException();
         }
+        this.initialTimer = warningTime;
         this.warningTimer = warningTime;
         this.hazardTimer = hazardTime;
 
@@ -71,6 +74,7 @@ public class Tile {
             throw new IllegalStateException();
         }
         this.targetTimer = targetTime;
+        this.initialTimer = targetTime;
 
         this.state = State.TARGET;
     }
@@ -81,5 +85,20 @@ public class Tile {
 
     public void clear() {
         this.state = State.EMPTY;
+    }
+
+    public double getCompletionRate() {
+        switch (state) {
+            case TARGET -> {
+                return (double) (targetTimer) / initialTimer;
+            }
+            case WARNING -> {
+                return (double) (warningTimer) / initialTimer;
+            }
+            case HAZARD -> {
+                return (double) (hazardTimer) / initialTimer;
+            }
+            case default -> throw new IllegalStateException();
+        }
     }
 }
