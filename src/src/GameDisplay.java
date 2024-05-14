@@ -3,10 +3,14 @@ import javax.swing.*;
 public class GameDisplay {
     public static final String GAME_NAME = "Dodge!";
 
+    public void toLeaderboardWithScore(int score) {
+        changePanel(State.END);
+    }
+
     public enum State {
         DISPLAY,
         MENU,
-        LEADERBOARD
+        END, LEADERBOARD
     }
     private State state;
 
@@ -21,7 +25,7 @@ public class GameDisplay {
 
         dPanel = new DisplayPanel(this);
         mPanel = new MenuPanel(this);
-        lPanel = new LeaderboardPanel();
+        lPanel = new LeaderboardPanel(this);
         frame.add(mPanel);
 
         this.state = State.MENU;

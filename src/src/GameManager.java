@@ -125,8 +125,9 @@ public class GameManager implements KeyListener {
 
         if (tiles[playerY][playerX].getState() == Tile.State.HAZARD) {
             if (--life == 0) {
+                int temp = score;
                 reset();
-                display.changePanel(GameDisplay.State.MENU);
+                display.toLeaderboardWithScore(temp);
             } else {
                 tiles[playerY][playerX].clear();
             }
