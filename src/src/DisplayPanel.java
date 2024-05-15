@@ -49,7 +49,7 @@ public class DisplayPanel extends JPanel {
         g.setColor(Color.WHITE);
         g.drawString("Life: " + manager.getLife(), 10, PX_HEIGHT);
         g.drawString("Score: " + manager.getScore(), PX_WIDTH - 300, PX_HEIGHT);
-        g.drawString("High Score: " + manager.getHighScore(), PX_WIDTH - 150, PX_HEIGHT);
+        g.drawString("Session High Score: " + manager.getHighScore(), PX_WIDTH - 200, PX_HEIGHT);
     }
 
     public Dimension getPreferredSize() {

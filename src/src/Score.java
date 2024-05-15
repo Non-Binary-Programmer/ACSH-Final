@@ -1,5 +1,10 @@
-public class Score implements Comparable<Score>{
+import java.io.Serial;
+import java.io.Serializable;
+
+public class Score implements Comparable<Score>, Serializable {
     private final int value;
+    @Serial
+    private static final long serialVersionUID = 3934788245289324L;
     private final String name;
 
     public Score(int value, String name) {

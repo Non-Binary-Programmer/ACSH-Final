@@ -1,34 +1,42 @@
 import javax.swing.*;
 import java.awt.*;
+import java.io.*;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.TreeSet;
 
 public class LeaderboardPanel extends JPanel {
-    private final TreeSet<Score> leaderboard;
+    private final ArrayList<Score> leaderboard;
     private final ArrayList<JLabel> scoreLabels;
     private final ArrayList<JLabel> nameLabels;
     private final GameDisplay display;
+    private final JButton menuButton, playButton;
 
     public LeaderboardPanel(GameDisplay display) {
         this.display = display;
-        leaderboard = new TreeSet<>();
+        leaderboard = new ArrayList<>();
         scoreLabels = new ArrayList<>();
         nameLabels = new ArrayList<>();
 
         setLayout(new GridLayout(0,2));
 
-        JButton menuButton = new JButton("Menu");
+        menuButton = new JButton("Menu");
         menuButton.addActionListener(e -> display.changePanel(GameDisplay.State.MENU));
 
-        JButton playButton = new JButton("Again!");
+        playButton = new JButton("Again!");
         playButton.addActionListener(e -> display.changePanel(GameDisplay.State.DISPLAY));
 
         add(menuButton);
         add(playButton);
 
-        add(new JLabel("Name"));
         add(new JLabel("Score"));
+        add(new JLabel("Name"));
 
         updateArrays();
         setVisible(true);
@@ -42,7 +50,7 @@ public class LeaderboardPanel extends JPanel {
     }
 
     private void updateArrays() {
-        Iterator<Score> iter = leaderboard.iterator();
+        Iterator<Score> iter = leaderboard.stream().sorted(Comparator.reverseOrder()).iterator();
         int i = 0;
         while (iter.hasNext()) {
             Score score = iter.next();
@@ -63,5 +71,18 @@ public class LeaderboardPanel extends JPanel {
         scoreLabels.add(new JLabel());
         nameLabels.add(new JLabel());
         updateArrays();
+    }
+
+    public void focusButton() {
+        playButton.requestFocusInWindow();
+    }
+
+    public void saveScores() {
+        try (FileOutputStream fileStream = new FileOutputStream("src/src/scores.tmp");
+             ObjectOutputStream objectStream = new ObjectOutputStream(fileStream)) {
+            objectStream.writeObject(leaderboard);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

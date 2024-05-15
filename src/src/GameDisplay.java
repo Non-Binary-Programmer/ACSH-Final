@@ -1,9 +1,12 @@
 import javax.swing.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class GameDisplay {
     public static final String GAME_NAME = "Dodge!";
 
     public void toLeaderboardWithScore(int score) {
+        ePanel.setScore(score);
         changePanel(State.END);
     }
 
@@ -18,6 +21,7 @@ public class GameDisplay {
     private final DisplayPanel dPanel;
     private final MenuPanel mPanel;
     private final LeaderboardPanel lPanel;
+    private final EndPanel ePanel;
 
     public GameDisplay() {
         frame = new JFrame(GAME_NAME);
@@ -26,11 +30,19 @@ public class GameDisplay {
         dPanel = new DisplayPanel(this);
         mPanel = new MenuPanel(this);
         lPanel = new LeaderboardPanel(this);
+        ePanel = new EndPanel(this, lPanel, 0);
         frame.add(mPanel);
 
         this.state = State.MENU;
 
         frame.pack();
+        frame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                super.windowClosing(e);
+                lPanel.saveScores();
+            }
+        });
         frame.setVisible(true);
     }
 
@@ -42,12 +54,14 @@ public class GameDisplay {
                 dPanel.unloop();
             }
             case LEADERBOARD -> frame.remove(lPanel);
+            case END -> frame.remove(ePanel);
         }
         this.state = target;
         switch (target) {
             case LEADERBOARD -> {
                 frame.add(lPanel);
                 frame.pack();
+                lPanel.focusButton();
             }
             case DISPLAY -> {
                 frame.add(dPanel);
@@ -60,6 +74,11 @@ public class GameDisplay {
             case MENU -> {
                 frame.add(mPanel);
                 frame.pack();
+            }
+            case END -> {
+                frame.add(ePanel);
+                frame.pack();
+                ePanel.focusField();
             }
         }
     }
