@@ -26,7 +26,7 @@ public class Tile {
                 return Color.RED;
             }
             case WARNING -> {
-                return Color.ORANGE;
+                return Color.YELLOW;
             }
             case TARGET -> {
                 return Color.GREEN;
@@ -90,13 +90,13 @@ public class Tile {
     public double getCompletionRate() {
         switch (state) {
             case TARGET -> {
-                return (double) (targetTimer) / initialTimer;
+                return 1 - (double) (targetTimer) / initialTimer;
             }
             case WARNING -> {
-                return (double) (warningTimer) / initialTimer;
+                return 1 - (double) (warningTimer) / initialTimer;
             }
             case HAZARD -> {
-                return (double) (hazardTimer) / initialTimer;
+                return 1 - (double) (hazardTimer) / initialTimer;
             }
             case default -> throw new IllegalStateException();
         }

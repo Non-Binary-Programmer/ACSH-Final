@@ -1,9 +1,11 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.HierarchyBoundsAdapter;
+import java.awt.event.HierarchyEvent;
 
 public class GamePanel extends JPanel {
-    public static final int PX_WIDTH = 800;
-    public static final int PX_HEIGHT = 800;
+    public int pxWidth = 800;
+    public int pxHeight = 800;
 
     private int gridWidth, gridHeight, pxMargin;
 
@@ -14,13 +16,21 @@ public class GamePanel extends JPanel {
     public GamePanel(GameDisplay display) {
         setBackground(Color.BLACK);
 
-        gridWidth = 8;
-        gridHeight = 8;
-        pxMargin = 10;
+        gridWidth = 7;
+        gridHeight = 7;
+        pxMargin = 15;
 
         manager = new GameManager(gridWidth, gridHeight, display);
 
         addKeyListener(manager);
+        addHierarchyBoundsListener(new HierarchyBoundsAdapter() {
+            @Override
+            public void ancestorResized(HierarchyEvent e) {
+                super.ancestorResized(e);
+                pxWidth = getWidth();
+                pxHeight = getHeight();
+            }
+        });
 
         loopRunning = true;
     }
@@ -29,14 +39,25 @@ public class GamePanel extends JPanel {
         System.out.println("painting");
         super.paintComponent(g);
 
-        int widthPerCell = (int) Math.ceil((double) PX_WIDTH / gridWidth);
-        int heightPerCell = (int) Math.ceil((double) PX_HEIGHT / gridHeight);
+        int widthPerCell = (int) Math.ceil((double) pxWidth / gridWidth);
+        int heightPerCell = (int) Math.ceil((double) pxHeight / gridHeight);
 
         for (int x = 0; x < gridWidth; x++) {
             for (int y = 0; y < gridHeight; y++) {
                 g.setColor(manager.getColor(x, y));
                 g.fillRect((widthPerCell * x) + pxMargin, (heightPerCell * y) + pxMargin,
                         widthPerCell - (2 * pxMargin), heightPerCell - (2 * pxMargin));
+                if (manager.getColor(x, y).equals(Color.YELLOW)) {
+                    g.setColor(Color.ORANGE);
+                    int modifiedWidth = (int) Math.ceil((widthPerCell - (2 * pxMargin)) *
+                            manager.getCompletionRate(x, y));
+                    int modifiedHeight = (int) Math.ceil((heightPerCell - (2 * pxMargin)) *
+                            manager.getCompletionRate(x, y));
+
+                    g.fillRect((widthPerCell * x) + (widthPerCell / 2) - (modifiedWidth / 2),
+                            (heightPerCell * y) + (heightPerCell / 2) - (modifiedHeight / 2),
+                            modifiedWidth, modifiedHeight);
+                }
             }
         }
 
@@ -47,13 +68,13 @@ public class GamePanel extends JPanel {
                 widthPerCell - (2 * pxMargin), heightPerCell - (2 * pxMargin));
 
         g.setColor(Color.WHITE);
-        g.drawString("Life: " + manager.getLife(), 10, PX_HEIGHT);
-        g.drawString("Score: " + manager.getScore(), PX_WIDTH - 300, PX_HEIGHT);
-        g.drawString("Session High Score: " + manager.getHighScore(), PX_WIDTH - 200, PX_HEIGHT);
+        g.drawString("Life: " + manager.getLife(), 10, pxHeight);
+        g.drawString("Score: " + manager.getScore(), pxWidth - 300, pxHeight);
+        g.drawString("Session High Score: " + manager.getHighScore(), pxWidth - 200, pxHeight);
     }
 
     public Dimension getPreferredSize() {
-        return new Dimension(PX_WIDTH, PX_HEIGHT);
+        return new Dimension(pxWidth, pxHeight);
     }
 
     public void loop() {

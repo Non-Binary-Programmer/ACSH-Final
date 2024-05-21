@@ -153,6 +153,10 @@ public class GameManager implements KeyListener {
         return tiles[y][x].getColor();
     }
 
+    public double getCompletionRate(int x, int y) {
+        return tiles[y][x].getCompletionRate();
+    }
+
     public int getPlayerX() {
         return playerX;
     }
