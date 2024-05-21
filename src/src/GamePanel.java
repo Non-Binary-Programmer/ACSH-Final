@@ -1,7 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 
-public class DisplayPanel extends JPanel {
+public class GamePanel extends JPanel {
     public static final int PX_WIDTH = 800;
     public static final int PX_HEIGHT = 800;
 
@@ -11,7 +11,7 @@ public class DisplayPanel extends JPanel {
 
     private GameManager manager;
 
-    public DisplayPanel (GameDisplay display) {
+    public GamePanel(GameDisplay display) {
         setBackground(Color.BLACK);
 
         gridWidth = 8;

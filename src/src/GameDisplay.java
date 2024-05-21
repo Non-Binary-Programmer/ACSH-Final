@@ -18,7 +18,7 @@ public class GameDisplay {
     private State state;
 
     private JFrame frame;
-    private final DisplayPanel dPanel;
+    private final GamePanel gPanel;
     private final MenuPanel mPanel;
     private final LeaderboardPanel lPanel;
     private final EndPanel ePanel;
@@ -27,7 +27,7 @@ public class GameDisplay {
         frame = new JFrame(GAME_NAME);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        dPanel = new DisplayPanel(this);
+        gPanel = new GamePanel(this);
         mPanel = new MenuPanel(this);
         lPanel = new LeaderboardPanel(this);
         ePanel = new EndPanel(this, lPanel, 0);
@@ -50,8 +50,8 @@ public class GameDisplay {
         switch (state) {
             case MENU -> frame.remove(mPanel);
             case DISPLAY -> {
-                frame.remove(dPanel);
-                dPanel.unloop();
+                frame.remove(gPanel);
+                gPanel.unloop();
             }
             case LEADERBOARD -> frame.remove(lPanel);
             case END -> frame.remove(ePanel);
@@ -64,11 +64,11 @@ public class GameDisplay {
                 lPanel.focusButton();
             }
             case DISPLAY -> {
-                frame.add(dPanel);
+                frame.add(gPanel);
                 frame.pack();
 
-                dPanel.requestFocusInWindow();
-                Thread loopThread = new Thread(dPanel::loop);
+                gPanel.requestFocusInWindow();
+                Thread loopThread = new Thread(gPanel::loop);
                 loopThread.start();
             }
             case MENU -> {
