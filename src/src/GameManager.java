@@ -100,26 +100,110 @@ public class GameManager implements KeyListener {
         nextHazard -= deltaTime;
         if (nextHazard <= 0) {
             difficulty += 0.05;
-            nextHazard += (long) (2000000000 / difficulty);
+            double random = Math.random();
 
-            int tilesCreated = 0;
-            while (tilesCreated < difficulty * 3) {
-                int targetX = (int) (Math.random() * width);
-                int targetY = (int) (Math.random() * height);
-
-                if (tiles[targetY][targetX].getState() == Tile.State.EMPTY) {
-                    tilesCreated++;
-                    if (Math.random() < 0.95) {
-                        tiles[targetY][targetX].readyAttack(
-                                (long) (1000000000 / Math.sqrt(difficulty)),
-                                (long) (1000000000 / Math.sqrt(difficulty))
-                        );
-                        score += 100 * difficulty;
-                    } else {
-                        tiles[targetY][targetX].becomeTarget((long) (3000000000L / Math.sqrt(difficulty)));
+            if (random < 1.0 / 8) {
+                nextHazard = (long) (1900000000 / Math.sqrt(difficulty));
+                for (int x = 0; x < tiles[0].length; x++) {
+                    for (int y = 0; y < tiles.length; y++) {
+                        if ((x + y) % 2 == (playerX + playerY) % 2) {
+                            tiles[y][x].clear();
+                            tiles[y][x].readyAttack(
+                                    (long) (1000000000 / Math.sqrt(difficulty)),
+                                    (long) (900000000 / Math.sqrt(difficulty))
+                            );
+                        } else {
+                            if (Math.abs(x - playerX) + Math.abs(y - playerY) == 1) {
+                                if (Math.random() < 0.5 && tiles[y][x].getState() == Tile.State.EMPTY) {
+                                    tiles[y][x].becomeTarget((long) (1900000000 / Math.sqrt(difficulty)));
+                                }
+                            }
+                        }
+                    }
+                }
+                score += 100 * Math.pow(difficulty, 2);
+                highScore = Math.max(score, highScore);
+            } else if (random < 2.0 / 8) {
+                nextHazard = (long) (1900000000 / Math.sqrt(difficulty));
+                for (int x = 0; x < tiles[0].length; x++) {
+                    for (int y = 0; y < tiles.length; y++) {
+                        if (y % 2 == playerY % 2) {
+                            tiles[y][x].clear();
+                            tiles[y][x].readyAttack(
+                                    (long) (1000000000 / Math.sqrt(difficulty)),
+                                    (long) (900000000 / Math.sqrt(difficulty))
+                            );
+                        } else {
+                            if (Math.abs(x - playerX) + Math.abs(y - playerY) == 3 && y % 2 != playerY % 2) {
+                                if (Math.random() < 0.5 && tiles[y][x].getState() == Tile.State.EMPTY) {
+                                    tiles[y][x].becomeTarget((long) (1900000000 / Math.sqrt(difficulty)));
+                                }
+                            }
+                        }
+                    }
+                }
+                score += 200 * Math.pow(difficulty, 2);
+                highScore = Math.max(score, highScore);
+            } else if (random < 3.0 / 8) {
+                nextHazard = (long) (1900000000 / Math.sqrt(difficulty));
+                for (int x = 0; x < tiles[0].length; x++) {
+                    for (int y = 0; y < tiles.length; y++) {
+                        if (x % 2 == playerX % 2) {
+                            tiles[y][x].clear();
+                            tiles[y][x].readyAttack(
+                                    (long) (1000000000 / Math.sqrt(difficulty)),
+                                    (long) (900000000 / Math.sqrt(difficulty))
+                            );
+                        } else {
+                            if (Math.abs(x - playerX) + Math.abs(y - playerY) == 3 && x % 2 != playerY % 2) {
+                                if (Math.random() < 0.5 && tiles[y][x].getState() == Tile.State.EMPTY) {
+                                    tiles[y][x].becomeTarget((long) (900000000 / Math.sqrt(difficulty)));
+                                }
+                            }
+                        }
+                    }
+                }
+                score += 200 * Math.pow(difficulty, 2);
+                highScore = Math.max(score, highScore);
+            } else if (random < 4.0 / 8) {
+                nextHazard = (long) (1900000000 / Math.sqrt(difficulty));
+                for (int x = 0; x < tiles[0].length; x++) {
+                    for (int y = 0; y < tiles.length; y++) {
+                        tiles[y][x].clear();
+                        if (x != playerX || y != playerY) {
+                            tiles[y][x].readyAttack(
+                                    (long) (1000000000 / Math.sqrt(difficulty)),
+                                    (long) (900000000 / Math.sqrt(difficulty))
+                            );
+                        } else {
+                            if (tiles[y][x].getState() == Tile.State.EMPTY) {
+                                tiles[y][x].becomeTarget((long) (1900000000 / Math.sqrt(difficulty)));
+                            }
+                        }
                     }
                 }
                 highScore = Math.max(score, highScore);
+            } else {
+                nextHazard += (long) (2000000000 / difficulty);
+                int tilesCreated = 0;
+                while (tilesCreated < difficulty * 3) {
+                    int targetX = (int) (Math.random() * width);
+                    int targetY = (int) (Math.random() * height);
+
+                    if (tiles[targetY][targetX].getState() == Tile.State.EMPTY) {
+                        tilesCreated++;
+                        if (Math.random() < 0.95) {
+                            tiles[targetY][targetX].readyAttack(
+                                    (long) (1000000000 / Math.sqrt(difficulty)),
+                                    (long) (1000000000 / Math.sqrt(difficulty))
+                            );
+                            score += 100 * difficulty;
+                        } else {
+                            tiles[targetY][targetX].becomeTarget((long) (3000000000L / Math.sqrt(difficulty)));
+                        }
+                    }
+                    highScore = Math.max(score, highScore);
+                }
             }
         }
 
@@ -129,7 +213,13 @@ public class GameManager implements KeyListener {
                 reset();
                 display.toLeaderboardWithScore(temp);
             } else {
-                tiles[playerY][playerX].clear();
+                for (Tile[] row: tiles) {
+                    for (Tile tile: row) {
+                        if (tile.getState() != Tile.State.TARGET) {
+                            tile.clear();
+                        }
+                    }
+                }
             }
         }
 

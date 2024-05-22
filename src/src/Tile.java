@@ -41,6 +41,7 @@ public class Tile {
                 if (warningTimer <= 0) {
                     this.state = State.HAZARD;
                     this.initialTimer = hazardTimer;
+                    this.hazardTimer += warningTimer;
                 }
             }
             case HAZARD -> {
