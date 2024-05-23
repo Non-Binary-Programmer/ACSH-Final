@@ -3,15 +3,18 @@ import java.awt.*;
 import java.awt.event.HierarchyBoundsAdapter;
 import java.awt.event.HierarchyEvent;
 
+@SuppressWarnings("BusyWait")
 public class GamePanel extends JPanel {
     public int pxWidth = 800;
     public int pxHeight = 800;
 
-    private int gridWidth, gridHeight, pxMargin;
+    private int gridWidth;
+    private int gridHeight;
+    private final int pxMargin;
 
-    private boolean loopRunning = false;
+    private boolean loopRunning;
 
-    private GameManager manager;
+    private final GameManager manager;
 
     public GamePanel(GameDisplay display) {
         setBackground(Color.BLACK);
@@ -95,7 +98,7 @@ public class GamePanel extends JPanel {
         }
     }
 
-    public void unloop() {
+    public void stopLoop() {
         loopRunning = false;
     }
 

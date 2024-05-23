@@ -17,7 +17,7 @@ public class GameDisplay {
     }
     private State state;
 
-    private JFrame frame;
+    private final JFrame frame;
     private final GamePanel gPanel;
     private final MenuPanel mPanel;
     private final LeaderboardPanel lPanel;
@@ -51,7 +51,7 @@ public class GameDisplay {
             case MENU -> frame.remove(mPanel);
             case GAME -> {
                 frame.remove(gPanel);
-                gPanel.unloop();
+                gPanel.stopLoop();
             }
             case LEADERBOARD -> frame.remove(lPanel);
             case END -> frame.remove(ePanel);

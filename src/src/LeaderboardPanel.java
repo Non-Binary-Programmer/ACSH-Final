@@ -21,6 +21,7 @@ public class LeaderboardPanel extends JPanel {
 
     private int size = 7;
 
+    @SuppressWarnings("unchecked")
     public LeaderboardPanel(GameDisplay display) {
         this.display = display;
         scoreLabels = new ArrayList<>();
@@ -63,9 +64,9 @@ public class LeaderboardPanel extends JPanel {
             @Override
             public Object getValueAt(int rowIndex, int columnIndex) {
                 if (columnIndex == 0) {
-                    return leaderboards.get(size - 4).get(rowIndex).getValue();
+                    return leaderboards.get(size - 4).get(rowIndex).value();
                 } else {
-                    return leaderboards.get(size - 4).get(rowIndex).getName();
+                    return leaderboards.get(size - 4).get(rowIndex).name();
                 }
             }
 
@@ -104,7 +105,7 @@ public class LeaderboardPanel extends JPanel {
             updateArrays();
             ArrayList<Score> unique = new ArrayList<>();
             for (Score score : leaderboards.get(size - 4)) {
-                if (unique.stream().noneMatch(s -> s.getName().equals(score.getName()))) {
+                if (unique.stream().noneMatch(s -> s.name().equals(score.name()))) {
                     unique.add(score);
                 }
             }
