@@ -3,8 +3,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 public class GameManager implements KeyListener {
-    private final int width;
-    private final int height;
+    private int width;
+    private int height;
 
     private final GameDisplay display;
 
@@ -19,7 +19,7 @@ public class GameManager implements KeyListener {
     private int highScore = 0;
     private int life = 3;
 
-    private final Tile[][] tiles;
+    private Tile[][] tiles;
 
     public GameManager (int width, int height, GameDisplay display) {
         this.display = display;
@@ -265,5 +265,18 @@ public class GameManager implements KeyListener {
 
     public int getLife() {
         return life;
+    }
+
+    public void changeDimensions(int width, int height) {
+        this.width = width;
+        this.height = height;
+        playerY = height / 2;
+        playerX = width / 2;
+        this.tiles = new Tile[height][width];
+        for (int row = 0; row < height; row++) {
+            for (int col = 0; col < width; col++) {
+                tiles[row][col] = new Tile();
+            }
+        }
     }
 }

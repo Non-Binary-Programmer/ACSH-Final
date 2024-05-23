@@ -99,4 +99,9 @@ public class GamePanel extends JPanel {
         loopRunning = false;
     }
 
+    public void changeDimensions(int width, int height) {
+        this.gridWidth = width;
+        this.gridHeight = height;
+        manager.changeDimensions(width, height);
+    }
 }

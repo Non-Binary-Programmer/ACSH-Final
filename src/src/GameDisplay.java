@@ -1,5 +1,4 @@
 import javax.swing.*;
-import java.awt.event.HierarchyBoundsAdapter;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
@@ -12,7 +11,7 @@ public class GameDisplay {
     }
 
     public enum State {
-        DISPLAY,
+        GAME,
         MENU,
         END, LEADERBOARD
     }
@@ -50,7 +49,7 @@ public class GameDisplay {
     public void changePanel(State target) {
         switch (state) {
             case MENU -> frame.remove(mPanel);
-            case DISPLAY -> {
+            case GAME -> {
                 frame.remove(gPanel);
                 gPanel.unloop();
             }
@@ -64,7 +63,7 @@ public class GameDisplay {
                 frame.pack();
                 lPanel.focusButton();
             }
-            case DISPLAY -> {
+            case GAME -> {
                 frame.add(gPanel);
                 frame.pack();
 
@@ -82,5 +81,9 @@ public class GameDisplay {
                 ePanel.focusField();
             }
         }
+    }
+
+    public void changeDimensions(int width, int height) {
+        gPanel.changeDimensions(width, height);
     }
 }
