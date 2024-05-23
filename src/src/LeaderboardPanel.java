@@ -9,23 +9,27 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class LeaderboardPanel extends JPanel {
-    private List<Score> leaderboard;
+    private ArrayList<List<Score>> leaderboards;
     private final ArrayList<JLabel> scoreLabels;
     private final ArrayList<JLabel> nameLabels;
     private final GameDisplay display;
-    private final JButton menuButton, playButton, clearButton, cleanButton;
+    private final JButton menuButton, playButton, clearButton, cleanButton, plusButton, minusButton;
     private final JTable leaderboardTable;
     private final JScrollPane scrollPane;
+    private final JPanel sizePanel, northPanel;
+    private final JLabel sizeLabel;
+
+    private int size = 7;
 
     public LeaderboardPanel(GameDisplay display) {
         this.display = display;
         scoreLabels = new ArrayList<>();
         nameLabels = new ArrayList<>();
-        leaderboard = new ArrayList<>();
+        leaderboards = new ArrayList<>();
         leaderboardTable = new JTable(new TableModel() {
             @Override
             public int getRowCount() {
-                return leaderboard.size();
+                return leaderboards.get(size - 4).size();
             }
 
             @Override
@@ -59,9 +63,9 @@ public class LeaderboardPanel extends JPanel {
             @Override
             public Object getValueAt(int rowIndex, int columnIndex) {
                 if (columnIndex == 0) {
-                    return leaderboard.get(rowIndex).getValue();
+                    return leaderboards.get(size - 4).get(rowIndex).getValue();
                 } else {
-                    return leaderboard.get(rowIndex).getName();
+                    return leaderboards.get(size - 4).get(rowIndex).getName();
                 }
             }
 
@@ -91,7 +95,7 @@ public class LeaderboardPanel extends JPanel {
 
         clearButton = new JButton("Clear scores");
         clearButton.addActionListener(e -> {
-            leaderboard.clear();
+            leaderboards.get(size - 4).clear();
             leaderboardTable.repaint();
         });
 
@@ -99,18 +103,53 @@ public class LeaderboardPanel extends JPanel {
         cleanButton.addActionListener(e -> {
             updateArrays();
             ArrayList<Score> unique = new ArrayList<>();
-            for (Score score : leaderboard) {
+            for (Score score : leaderboards.get(size - 4)) {
                 if (unique.stream().noneMatch(s -> s.getName().equals(score.getName()))) {
                     unique.add(score);
                 }
             }
-            leaderboard = unique;
+            leaderboards.set(size - 4, unique);
             leaderboardTable.repaint();
         });
+        cleanButton.setAlignmentX(CENTER_ALIGNMENT);
+        cleanButton.setPreferredSize(new Dimension(this.getWidth(), cleanButton.getPreferredSize().height));
+
+        this.sizePanel = new JPanel();
+        sizePanel.setLayout(new BorderLayout());
+
+        this.sizeLabel = new JLabel("Size: " + size);
+        sizeLabel.setAlignmentX(CENTER_ALIGNMENT);
+        sizeLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        sizePanel.add(sizeLabel, BorderLayout.CENTER);
+
+        this.plusButton = new JButton("+");
+        plusButton.addActionListener(e -> {
+            size++;
+            size = Math.min(size, 15);
+            sizeLabel.setText("Size: " + size);
+            display.changeDimensions(size, size);
+            leaderboardTable.repaint();
+        });
+        sizePanel.add(plusButton, BorderLayout.EAST);
+
+        this.minusButton = new JButton("-");
+        minusButton.addActionListener(e -> {
+            size--;
+            size = Math.max(size, 4);
+            sizeLabel.setText("Size: " + size);
+            display.changeDimensions(size, size);
+            leaderboardTable.repaint();
+        });
+        sizePanel.add(minusButton, BorderLayout.WEST);
+
+        northPanel = new JPanel();
+        northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
+        northPanel.add(cleanButton);
+        northPanel.add(sizePanel);
 
         add(menuButton, BorderLayout.WEST);
         add(playButton, BorderLayout.EAST);
-        add(cleanButton, BorderLayout.NORTH);
+        add(northPanel, BorderLayout.NORTH);
         add(clearButton, BorderLayout.SOUTH);
 
         scrollPane = new JScrollPane(leaderboardTable);
@@ -119,9 +158,12 @@ public class LeaderboardPanel extends JPanel {
 
         try (FileInputStream fileStream = new FileInputStream("src/src/scores.txt");
              ObjectInputStream objectStream = new ObjectInputStream(fileStream)) {
-            leaderboard = (ArrayList<Score>) objectStream.readObject();
+            leaderboards = (ArrayList<List<Score>>) objectStream.readObject();
         } catch (IOException | ClassNotFoundException ignored) {
-            leaderboard = new ArrayList<>();
+            leaderboards = new ArrayList<>();
+            for (int i = 0; i < 12; i++) {
+                leaderboards.add(new ArrayList<>());
+            }
         }
 
         updateArrays();
@@ -136,12 +178,12 @@ public class LeaderboardPanel extends JPanel {
     }
 
     private void updateArrays() {
-        leaderboard = leaderboard.stream().sorted(Comparator.reverseOrder()).collect(Collectors.toList());
+        leaderboards.set(size - 4, leaderboards.get(size - 4).stream().sorted(Comparator.reverseOrder()).collect(Collectors.toList()));
     }
 
     public void addScore(Score score) {
         clearPanel();
-        leaderboard.add(score);
+        leaderboards.get(size - 4).add(score);
         scoreLabels.add(new JLabel());
         nameLabels.add(new JLabel());
         updateArrays();
@@ -154,9 +196,14 @@ public class LeaderboardPanel extends JPanel {
     public void saveScores() {
         try (FileOutputStream fileStream = new FileOutputStream("src/src/scores.txt");
              ObjectOutputStream objectStream = new ObjectOutputStream(fileStream)) {
-            objectStream.writeObject(leaderboard);
+            objectStream.writeObject(leaderboards);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public void setSize (int size) {
+        this.size = size;
+        sizeLabel.setText("Size: " + size);
     }
 }

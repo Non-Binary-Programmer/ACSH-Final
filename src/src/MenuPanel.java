@@ -29,7 +29,9 @@ public class MenuPanel extends JPanel {
         this.plusButton = new JButton("+");
         plusButton.addActionListener(e -> {
             size++;
+            size = Math.min(size, 15);
             sizeLabel.setText("Size: " + size);
+            display.changeDimensions(size, size);
         });
         sizePanel.add(plusButton, BorderLayout.EAST);
 
@@ -38,16 +40,14 @@ public class MenuPanel extends JPanel {
             size--;
             size = Math.max(size, 4);
             sizeLabel.setText("Size: " + size);
+            display.changeDimensions(size, size);
         });
         sizePanel.add(minusButton, BorderLayout.WEST);
 
         add(sizePanel);
 
         this.playButton = new JButton("Play!");
-        playButton.addActionListener(e -> {
-            display.changePanel(GameDisplay.State.GAME);
-            display.changeDimensions(size, size);
-        });
+        playButton.addActionListener(e -> display.changePanel(GameDisplay.State.GAME));
         playButton.setAlignmentX(CENTER_ALIGNMENT);
         add(playButton);
 
@@ -55,5 +55,12 @@ public class MenuPanel extends JPanel {
         leaderButton.addActionListener(e -> display.changePanel(GameDisplay.State.LEADERBOARD));
         leaderButton.setAlignmentX(CENTER_ALIGNMENT);
         add(leaderButton);
+
+        setPreferredSize(new Dimension(200, 100));
+    }
+
+    public void setSize(int size) {
+        this.size = size;
+        sizeLabel.setText("Size: " + size);
     }
 }

@@ -85,5 +85,7 @@ public class GameDisplay {
 
     public void changeDimensions(int width, int height) {
         gPanel.changeDimensions(width, height);
+        lPanel.setSize(width);
+        mPanel.setSize(width);
     }
 }

@@ -18,7 +18,7 @@ public class GamePanel extends JPanel {
 
         gridWidth = 7;
         gridHeight = 7;
-        pxMargin = 15;
+        pxMargin = 10;
 
         manager = new GameManager(gridWidth, gridHeight, display);
 
@@ -68,9 +68,9 @@ public class GamePanel extends JPanel {
                 widthPerCell - (2 * pxMargin), heightPerCell - (2 * pxMargin));
 
         g.setColor(Color.WHITE);
-        g.drawString("Life: " + manager.getLife(), 10, pxHeight);
-        g.drawString("Score: " + manager.getScore(), pxWidth - 300, pxHeight);
-        g.drawString("Session High Score: " + manager.getHighScore(), pxWidth - 200, pxHeight);
+        g.drawString("Life: " + manager.getLife(), 10, 10);
+        g.drawString("Score: " + manager.getScore(), pxWidth - 300, 10);
+        g.drawString("Session High Score: " + manager.getHighScore(), pxWidth - 200, 10);
     }
 
     public Dimension getPreferredSize() {

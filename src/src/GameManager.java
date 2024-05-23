@@ -101,7 +101,9 @@ public class GameManager implements KeyListener {
         if (nextHazard <= 0) {
             difficulty += 0.05;
             double random = Math.random();
-
+            if (width == 4) {
+                random = random / 2;
+            }
             if (random < 1.0 / 8) {
                 nextHazard = (long) (1900000000 / Math.sqrt(difficulty));
                 for (int x = 0; x < tiles[0].length; x++) {
@@ -157,7 +159,7 @@ public class GameManager implements KeyListener {
                         } else {
                             if (Math.abs(x - playerX) + Math.abs(y - playerY) == 3 && x % 2 != playerY % 2) {
                                 if (Math.random() < 0.5 && tiles[y][x].getState() == Tile.State.EMPTY) {
-                                    tiles[y][x].becomeTarget((long) (900000000 / Math.sqrt(difficulty)));
+                                    tiles[y][x].becomeTarget((long) (1900000000 / Math.sqrt(difficulty)));
                                 }
                             }
                         }
@@ -165,7 +167,7 @@ public class GameManager implements KeyListener {
                 }
                 score += 200 * Math.pow(difficulty, 2);
                 highScore = Math.max(score, highScore);
-            } else if (random < 4.0 / 8) {
+            } else if (random <= 4.0 / 8) {
                 nextHazard = (long) (1900000000 / Math.sqrt(difficulty));
                 for (int x = 0; x < tiles[0].length; x++) {
                     for (int y = 0; y < tiles.length; y++) {
@@ -225,13 +227,13 @@ public class GameManager implements KeyListener {
 
         if (tiles[playerY][playerX].getState() == Tile.State.TARGET) {
             double rand = Math.random();
-            if (rand < 0.5) {
-                score += 500 * difficulty;
+            if ((rand < 0.7 && width != 4) || (rand < 0.8 && width == 4)) {
+                score += 500 * Math.pow(difficulty, 2);
             } else if (rand < 0.9) {
-                score += 200 * difficulty;
+                score += 200 * Math.pow(difficulty, 2);
                 difficulty -= 0.15;
             } else {
-                score += 100 * difficulty;
+                score += 100 * Math.pow(difficulty, 2);
                 life++;
             }
             highScore = Math.max(score, highScore);
