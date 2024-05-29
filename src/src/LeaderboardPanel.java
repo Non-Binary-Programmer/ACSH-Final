@@ -105,7 +105,7 @@ public class LeaderboardPanel extends JPanel {
             updateArrays();
             ArrayList<Score> unique = new ArrayList<>();
             for (Score score : leaderboards.get(size - 5)) {
-                if (unique.stream().noneMatch(s -> s.name().equals(score.name()))) {
+                if (unique.stream().noneMatch(s -> s.name().equals(score.name()) || s.name().equals(""))) {
                     unique.add(score);
                 }
             }
