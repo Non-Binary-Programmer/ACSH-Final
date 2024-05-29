@@ -47,3 +47,5 @@ each size has its own leaderboard.
   * Referenced while writing code for leaderboard file saving
 * https://stackoverflow.com/questions/16111496/java-how-can-i-write-my-arraylist-to-a-file-and-read-load-that-file-to-the
   * Referenced while writing code for leaderboard file saving
+* https://www.rexegg.com/regex-quickstart.html
+  * Referenced while writing code that didn't end up in the final project

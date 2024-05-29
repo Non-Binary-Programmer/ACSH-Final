@@ -163,7 +163,13 @@ public class LeaderboardPanel extends JPanel {
         } catch (IOException | ClassNotFoundException ignored) {
             leaderboards = new ArrayList<>();
             for (int i = 0; i < 12; i++) {
-                leaderboards.add(new ArrayList<>());
+                ArrayList<Score> starter = new ArrayList<>();
+                int score = 100000;
+                for (int j = 0; j < 10; j++) {
+                    starter.add(new Score(score, ""));
+                    score -= 10000;
+                }
+                leaderboards.add(starter);
             }
         }
 
@@ -179,6 +185,7 @@ public class LeaderboardPanel extends JPanel {
     }
 
     private void updateArrays() {
+        System.out.println(leaderboards);
         leaderboards.set(size - 4, leaderboards.get(size - 4).stream().sorted(Comparator.reverseOrder()).collect(Collectors.toList()));
     }
 
