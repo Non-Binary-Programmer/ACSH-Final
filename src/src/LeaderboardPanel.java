@@ -30,7 +30,7 @@ public class LeaderboardPanel extends JPanel {
         leaderboardTable = new JTable(new TableModel() {
             @Override
             public int getRowCount() {
-                return leaderboards.get(size - 4).size();
+                return leaderboards.get(size - 5).size();
             }
 
             @Override
@@ -64,9 +64,9 @@ public class LeaderboardPanel extends JPanel {
             @Override
             public Object getValueAt(int rowIndex, int columnIndex) {
                 if (columnIndex == 0) {
-                    return leaderboards.get(size - 4).get(rowIndex).value();
+                    return leaderboards.get(size - 5).get(rowIndex).value();
                 } else {
-                    return leaderboards.get(size - 4).get(rowIndex).name();
+                    return leaderboards.get(size - 5).get(rowIndex).name();
                 }
             }
 
@@ -96,7 +96,7 @@ public class LeaderboardPanel extends JPanel {
 
         clearButton = new JButton("Clear scores");
         clearButton.addActionListener(e -> {
-            leaderboards.get(size - 4).clear();
+            leaderboards.get(size - 5).clear();
             leaderboardTable.repaint();
         });
 
@@ -104,12 +104,12 @@ public class LeaderboardPanel extends JPanel {
         cleanButton.addActionListener(e -> {
             updateArrays();
             ArrayList<Score> unique = new ArrayList<>();
-            for (Score score : leaderboards.get(size - 4)) {
+            for (Score score : leaderboards.get(size - 5)) {
                 if (unique.stream().noneMatch(s -> s.name().equals(score.name()))) {
                     unique.add(score);
                 }
             }
-            leaderboards.set(size - 4, unique);
+            leaderboards.set(size - 5, unique);
             leaderboardTable.repaint();
         });
         cleanButton.setAlignmentX(CENTER_ALIGNMENT);
@@ -136,7 +136,7 @@ public class LeaderboardPanel extends JPanel {
         this.minusButton = new JButton("-");
         minusButton.addActionListener(e -> {
             size--;
-            size = Math.max(size, 4);
+            size = Math.max(size, 5);
             sizeLabel.setText("Size: " + size);
             display.changeDimensions(size, size);
             leaderboardTable.repaint();
@@ -162,7 +162,7 @@ public class LeaderboardPanel extends JPanel {
             leaderboards = (ArrayList<List<Score>>) objectStream.readObject();
         } catch (IOException | ClassNotFoundException ignored) {
             leaderboards = new ArrayList<>();
-            for (int i = 0; i < 12; i++) {
+            for (int i = 0; i < 11; i++) {
                 ArrayList<Score> starter = new ArrayList<>();
                 int score = 100000;
                 for (int j = 0; j < 10; j++) {
@@ -186,12 +186,12 @@ public class LeaderboardPanel extends JPanel {
 
     private void updateArrays() {
         System.out.println(leaderboards);
-        leaderboards.set(size - 4, leaderboards.get(size - 4).stream().sorted(Comparator.reverseOrder()).collect(Collectors.toList()));
+        leaderboards.set(size - 5, leaderboards.get(size - 5).stream().sorted(Comparator.reverseOrder()).collect(Collectors.toList()));
     }
 
     public void addScore(Score score) {
         clearPanel();
-        leaderboards.get(size - 4).add(score);
+        leaderboards.get(size - 5).add(score);
         scoreLabels.add(new JLabel());
         nameLabels.add(new JLabel());
         updateArrays();

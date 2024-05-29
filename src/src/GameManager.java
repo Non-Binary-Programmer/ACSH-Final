@@ -101,7 +101,7 @@ public class GameManager implements KeyListener {
         if (nextHazard <= 0) {
             difficulty += 0.05;
             double random = Math.random();
-            if (width == 4) {
+            if (width == 5) {
                 random = random / 2;
             }
             if (random < 1.0 / 8) {
@@ -227,7 +227,7 @@ public class GameManager implements KeyListener {
 
         if (tiles[playerY][playerX].getState() == Tile.State.TARGET) {
             double rand = Math.random();
-            if ((rand < 0.7 && width != 4) || (rand < 0.8 && width == 4)) {
+            if ((rand < 0.7 && width != 5) || (rand < 0.8 && width == 5)) {
                 score += 500 * Math.pow(difficulty, 2);
             } else if (rand < 0.9) {
                 score += 200 * Math.pow(difficulty, 2);

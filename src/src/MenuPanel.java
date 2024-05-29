@@ -38,7 +38,7 @@ public class MenuPanel extends JPanel {
         this.minusButton = new JButton("-");
         minusButton.addActionListener(e -> {
             size--;
-            size = Math.max(size, 4);
+            size = Math.max(size, 5);
             sizeLabel.setText("Size: " + size);
             display.changeDimensions(size, size);
         });
