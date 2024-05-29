@@ -105,7 +105,8 @@ public class LeaderboardPanel extends JPanel {
             updateArrays();
             ArrayList<Score> unique = new ArrayList<>();
             for (Score score : leaderboards.get(size - 5)) {
-                if (unique.stream().noneMatch(s -> s.name().equals(score.name()) || s.name().equals(""))) {
+                System.out.println(score.name());
+                if (unique.stream().noneMatch(s -> s.name().equals(score.name())) || score.name().equals(" ")) {
                     unique.add(score);
                 }
             }
@@ -166,7 +167,7 @@ public class LeaderboardPanel extends JPanel {
                 ArrayList<Score> starter = new ArrayList<>();
                 int score = 100000;
                 for (int j = 0; j < 10; j++) {
-                    starter.add(new Score(score, ""));
+                    starter.add(new Score(score, " "));
                     score -= 10000;
                 }
                 leaderboards.add(starter);
