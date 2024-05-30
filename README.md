@@ -13,8 +13,8 @@ orthogonal directions for fairness) to move around. Yellow squares will become r
 damage you. Touching green squares gives you bonus points, and can sometimes reduce the difficulty or give you life!
 You get points for surviving as long as possible.
 
-The size controls are pretty self-explanatory, but size 4 is special. It changes the game to not include the randomly 
-designed attacks, as they will otherwise take up the entire screen. The size can be changed from 4 to 15, inclusive, and
+The size controls are pretty self-explanatory, but size 5 is special. It changes the game to not include the randomly 
+designed attacks, as they will otherwise take up the entire screen. The size can be changed from 5 to 15, inclusive, and
 each size has its own leaderboard.
 
 ### File descriptions

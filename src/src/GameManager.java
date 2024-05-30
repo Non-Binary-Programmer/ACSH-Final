@@ -188,7 +188,8 @@ public class GameManager implements KeyListener {
             } else {
                 nextHazard += (long) (2000000000 / difficulty);
                 int tilesCreated = 0;
-                while (tilesCreated < difficulty * 3) {
+                int creationAttempts = 0;
+                while (tilesCreated < difficulty * 3 && creationAttempts++ < 1000) {
                     int targetX = (int) (Math.random() * width);
                     int targetY = (int) (Math.random() * height);
 
